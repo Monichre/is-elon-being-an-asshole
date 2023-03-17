@@ -1,32 +1,41 @@
-import axios from 'axios'
 import { tweetIt } from '../twitter/tweet'
 
+const { Configuration, OpenAIApi } = require('openai')
+
+const configuration = new Configuration({
+  apiKey: process.env.OPENAI_API_KEY,
+})
+const openai = new OpenAIApi(configuration)
+
 export const analyzeThis = async (tweet) => {
-  console.log('tweet: ', tweet);
-// Send tweet text to OpenAI for sentiment analysis
-const analysis = await axios.post(process.env.OPENAI_API_URL, {
-  context: tweet.text,
-  prompt: 'Is Elon being an asshole?',
-  temperature: 0.5,
-  max_tokens: 1,
-  stop: '\n'
-}, {
-  headers: {
-    'Content-Type': 'application/json',
-    'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`
-  }
-});
-console.log('analysis: ', analysis);
+  const analysis = await openai
+    .createCompletion({
+      model: 'text-davinci-003',
+      prompt: `Decide whether a Tweet's sentiment is positive, neutral, or negative.\n\nTweet: ${tweet.text}\nSentiment:`,
+      max_tokens: 7,
+      temperature: 0,
+      top_p: 1,
+      n: 1,
+      stream: false,
+      logprobs: null,
+      stop: '\n',
+    })
+    .then(({ data: { choices } }) => {
+      const { text } = choices.pop()
 
-// Parse sentiment analysis results
-const sentimentScore = analysis.data.choices[0].text;
-const isAsshole = sentimentScore < -0.5; // Example threshold
-console.log('isAsshole: ', isAsshole);
+      return text
+    })
+    .catch((err) => {
+      console.log('err in openai: ', err)
+    })
 
-// Send response tweet from bot account
-const judgement = isAsshole ? 'Elon is being an asshole' : 'Elon is not being an asshole';
+  const isAsshole = analysis !== 'Positive'
 
-await tweetIt({judgement, tweet})
-return {judgement, tweet};
-  
+  // Send response tweet from bot account
+  const judgement = isAsshole
+    ? 'Elon is being an asshole'
+    : 'Elon is not being an asshole'
+
+  // await tweetIt({ judgement, tweet })
+  return { judgement, tweet }
 }

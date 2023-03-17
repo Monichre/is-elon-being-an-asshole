@@ -44,73 +44,87 @@ var __asyncValues = (this && this.__asyncValues) || function (o) {
     function settle(resolve, reject, d, v) { Promise.resolve(v).then(function(v) { resolve({ value: v, done: d }); }, reject); }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.initStream = void 0;
+exports.isElonBeingAnAsshole = void 0;
 // import { ETwitterStreamEvent } from 'twitter-api-v2'
 // import { analyzeThis } from '../open-ai/sentiment'
 var constants_1 = require("../../constants");
 // import { tweetIt } from './tweet'
 var client_1 = require("./client");
-var initStream = function () { return __awaiter(void 0, void 0, void 0, function () {
-    var rules, searchStream, _a, searchStream_1, searchStream_1_1, tweet, e_1_1;
-    var _b, e_1, _c, _d;
-    var _e;
-    return __generator(this, function (_f) {
-        switch (_f.label) {
+var handler_1 = require("../../handler");
+var isElonBeingAnAsshole = function () { return __awaiter(void 0, void 0, void 0, function () {
+    var rules, searchStream, latestTweets, _a, searchStream_1, searchStream_1_1, tweet, e_1_1, _b, judgement, tweet;
+    var _c, e_1, _d, _e;
+    var _f;
+    return __generator(this, function (_g) {
+        switch (_g.label) {
             case 0: return [4 /*yield*/, client_1.twitter.tweets.addOrDeleteRules({
                     add: [{ value: "from:".concat(constants_1.elon) }],
                 })];
             case 1:
-                _f.sent();
+                _g.sent();
                 return [4 /*yield*/, client_1.twitter.tweets.getRules()];
             case 2:
-                rules = _f.sent();
+                rules = _g.sent();
                 console.log(rules);
                 searchStream = client_1.twitter.tweets.searchStream({
                     expansions: ['author_id'],
                     'tweet.fields': ['author_id'],
                     // ids: [elon]
                 });
+                latestTweets = [];
                 console.log('searchStream: ', searchStream);
-                _f.label = 3;
+                _g.label = 3;
             case 3:
-                _f.trys.push([3, 8, 9, 14]);
+                _g.trys.push([3, 8, 9, 14]);
                 _a = true, searchStream_1 = __asyncValues(searchStream);
-                _f.label = 4;
+                _g.label = 4;
             case 4: return [4 /*yield*/, searchStream_1.next()];
             case 5:
-                if (!(searchStream_1_1 = _f.sent(), _b = searchStream_1_1.done, !_b)) return [3 /*break*/, 7];
-                _d = searchStream_1_1.value;
+                if (!(searchStream_1_1 = _g.sent(), _c = searchStream_1_1.done, !_c)) return [3 /*break*/, 7];
+                _e = searchStream_1_1.value;
                 _a = false;
                 try {
-                    tweet = _d;
+                    tweet = _e;
                     console.log('tweet: ', tweet);
-                    console.log(((_e = tweet.data) === null || _e === void 0 ? void 0 : _e.author_id) === constants_1.elon);
+                    console.log(((_f = tweet.data) === null || _f === void 0 ? void 0 : _f.author_id) === constants_1.elon);
+                    latestTweets.push(tweet);
                 }
                 finally {
                     _a = true;
                 }
-                _f.label = 6;
+                _g.label = 6;
             case 6: return [3 /*break*/, 4];
             case 7: return [3 /*break*/, 14];
             case 8:
-                e_1_1 = _f.sent();
+                e_1_1 = _g.sent();
                 e_1 = { error: e_1_1 };
                 return [3 /*break*/, 14];
             case 9:
-                _f.trys.push([9, , 12, 13]);
-                if (!(!_a && !_b && (_c = searchStream_1.return))) return [3 /*break*/, 11];
-                return [4 /*yield*/, _c.call(searchStream_1)];
+                _g.trys.push([9, , 12, 13]);
+                if (!(!_a && !_c && (_d = searchStream_1.return))) return [3 /*break*/, 11];
+                return [4 /*yield*/, _d.call(searchStream_1)];
             case 10:
-                _f.sent();
-                _f.label = 11;
+                _g.sent();
+                _g.label = 11;
             case 11: return [3 /*break*/, 13];
             case 12:
                 if (e_1) throw e_1.error;
                 return [7 /*endfinally*/];
             case 13: return [7 /*endfinally*/];
-            case 14: return [2 /*return*/];
+            case 14:
+                if (!latestTweets.length) return [3 /*break*/, 16];
+                return [4 /*yield*/, (0, exports.isElonBeingAnAsshole)(latestTweets[0])];
+            case 15:
+                _b = _g.sent(), judgement = _b.judgement, tweet = _b.tweet;
+                console.log('judgement: ', judgement);
+                console.log('tweet: ', tweet);
+                return [2 /*return*/, {
+                        judgement: judgement,
+                        tweet: tweet,
+                    }];
+            case 16: return [2 /*return*/];
         }
     });
 }); };
-exports.initStream = initStream;
-//# sourceMappingURL=stream.js.map
+exports.isElonBeingAnAsshole = isElonBeingAnAsshole;
+//# sourceMappingURL=get-tweet-stream.js.map

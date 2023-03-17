@@ -21,12 +21,13 @@ functions:
   isElonBeingAnAsshole:
     handler: handler.isElonBeingAnAsshole
     events:
+      # - schedule: rate(15 minute)
       - httpApi:
           path: /
           method: get
 
 plugins:
-  - serverless-offline
   - serverless-plugin-typescript
+  - serverless-offline
   - serverless-dotenv-plugin
 

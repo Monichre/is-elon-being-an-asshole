@@ -39,13 +39,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.isElonBeingAnAsshole = void 0;
 var are_you_being_an_asshole_1 = require("./services/are-you-being-an-asshole");
 var isElonBeingAnAsshole = function (event) { return __awaiter(void 0, void 0, void 0, function () {
-    var areYou;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, (0, are_you_being_an_asshole_1.areYouBeingAnAssholeElon)()];
+            case 0: return [4 /*yield*/, (0, are_you_being_an_asshole_1.letsFindOut)()];
             case 1:
-                areYou = _a.sent();
-                console.log('areYou: ', areYou);
+                _a.sent();
                 return [2 /*return*/, {
                         statusCode: 200,
                         body: JSON.stringify({

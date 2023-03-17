@@ -36,46 +36,47 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.analyzeThis = void 0;
-var _a = require('openai'), Configuration = _a.Configuration, OpenAIApi = _a.OpenAIApi;
-var configuration = new Configuration({
-    apiKey: process.env.OPENAI_API_KEY,
-});
-var openai = new OpenAIApi(configuration);
-var analyzeThis = function (tweet) { return __awaiter(void 0, void 0, void 0, function () {
-    var analysis, isAsshole, judgement;
+exports.hasElonBeenAnAssholeRecently = void 0;
+var sentiment_1 = require("../open-ai/sentiment");
+var constants_1 = require("../../constants");
+var client_1 = require("./client");
+var hasElonBeenAnAssholeRecently = function () { return __awaiter(void 0, void 0, void 0, function () {
+    var res, recentTweets, letSee;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, openai
-                    .createCompletion({
-                    model: 'text-davinci-003',
-                    prompt: "Decide whether a Tweet's sentiment is positive, neutral, or negative.\n\nTweet: ".concat(tweet.text, "\nSentiment:"),
-                    max_tokens: 7,
-                    temperature: 0,
-                    top_p: 1,
-                    n: 1,
-                    stream: false,
-                    logprobs: null,
-                    stop: '\n',
+            case 0: return [4 /*yield*/, client_1.twitter.tweets.tweetsRecentSearch({
+                    query: "(from: ".concat(constants_1.elon, ") new"),
+                    expansions: ['author_id', 'attachments.media_keys', 'geo.place_id'],
+                    'tweet.fields': ['text', 'attachments'],
                 })
-                    .then(function (_a) {
-                    var choices = _a.data.choices;
-                    var text = choices.pop().text;
-                    return text;
-                })
-                    .catch(function (err) {
-                    console.log('err in openai: ', err);
-                })];
+                // .catch((err) => console.log('err: ', err))
+            ];
             case 1:
-                analysis = _a.sent();
-                isAsshole = analysis !== 'Positive';
-                judgement = isAsshole
-                    ? 'Elon is being an asshole'
-                    : 'Elon is not being an asshole';
-                // await tweetIt({ judgement, tweet })
-                return [2 /*return*/, { judgement: judgement, tweet: tweet }];
+                res = _a.sent();
+                // .catch((err) => console.log('err: ', err))
+                console.log('res: ', res);
+                recentTweets = res ? res.data : [];
+                console.log('recentTweets: ', recentTweets);
+                return [4 /*yield*/, Promise.all(recentTweets === null || recentTweets === void 0 ? void 0 : recentTweets.map(function (tweet) { return __awaiter(void 0, void 0, void 0, function () {
+                        var judgement;
+                        return __generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0: return [4 /*yield*/, (0, sentiment_1.analyzeThis)(tweet)];
+                                case 1:
+                                    judgement = (_a.sent()).judgement;
+                                    console.log('judgement: ', judgement);
+                                    return [2 /*return*/, {
+                                            judgement: judgement,
+                                            tweet: tweet,
+                                        }];
+                            }
+                        });
+                    }); }))];
+            case 2:
+                letSee = _a.sent();
+                return [2 /*return*/, letSee];
         }
     });
 }); };
-exports.analyzeThis = analyzeThis;
-//# sourceMappingURL=sentiment.js.map
+exports.hasElonBeenAnAssholeRecently = hasElonBeenAnAssholeRecently;
+//# sourceMappingURL=get-recent-tweets.js.map

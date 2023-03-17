@@ -36,19 +36,24 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.areYouBeingAnAssholeElon = void 0;
-var stream_1 = require("./twitter/stream");
-var areYouBeingAnAssholeElon = function () { return __awaiter(void 0, void 0, void 0, function () {
+exports.letsFindOut = void 0;
+var get_recent_tweets_1 = require("./twitter/get-recent-tweets");
+var get_tweet_stream_1 = require("./twitter/get-tweet-stream");
+var letsFindOut = function () { return __awaiter(void 0, void 0, void 0, function () {
+    var haveYouBeen, areYou;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, (0, stream_1.initStream)()
-                // await await stream.connect({ autoReconnect: true, autoReconnectRetries: Infinity });
-            ];
+            case 0: return [4 /*yield*/, (0, get_recent_tweets_1.hasElonBeenAnAssholeRecently)()];
             case 1:
-                _a.sent();
+                haveYouBeen = _a.sent();
+                return [4 /*yield*/, get_tweet_stream_1.isElonBeingAnAsshole];
+            case 2:
+                areYou = _a.sent();
+                console.log('haveYouBeen: ', haveYouBeen);
+                console.log('areYou: ', areYou);
                 return [2 /*return*/];
         }
     });
 }); };
-exports.areYouBeingAnAssholeElon = areYouBeingAnAssholeElon;
+exports.letsFindOut = letsFindOut;
 //# sourceMappingURL=are-you-being-an-asshole.js.map
