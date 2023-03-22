@@ -1,11 +1,11 @@
-import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
+import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
 
-import { letsFindOut } from './services/are-you-being-an-asshole'
+import { areYouBeingAnAssholeElon } from './services/are-you-being-an-asshole'
 
 export const isElonBeingAnAsshole = async (
   event: APIGatewayProxyEvent
 ): Promise<APIGatewayProxyResult> => {
-  await letsFindOut()
+  await areYouBeingAnAssholeElon()
 
   return {
     statusCode: 200,

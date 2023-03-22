@@ -1,7 +1,6 @@
 useDotenv: true
 
 org: monichre
-app: is-elon-being-an-asshole
 service: is-elon-being-an-asshole
 frameworkVersion: '3'
 
@@ -11,10 +10,12 @@ provider:
   environment:
     OPENAI_API_KEY: ${OPENAI_API_KEY}
     OPENAI_API_URL: ${OPENAI_API_URL}
-    TWITTER_API_ACCESS_TOKEN: ${env:TWITTER_API_ACCESS_TOKEN}
-    TWITTER_API_SECRET: ${env:TWITTER_API_SECRET}
+    TWITTER_ACCESS_TOKEN: ${env:TWITTER_ACCESS_TOKEN}
+    TWITTER_ACCESS_TOKEN_SECRET: ${env:TWITTER_ACCESS_TOKEN_SECRET}
     TWITTER_API_BEARER_TOKEN: ${env:TWITTER_API_BEARER_TOKEN}
-    
+    TWITTER_API_KEY: ${env:TWITTER_API_KEY}
+    TWITTER_API_SECRET: ${env:TWITTER_API_SECRET}
+
 
 
 functions:
